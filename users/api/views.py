@@ -1,5 +1,3 @@
-import json
-import pprint
 from django.core.cache import cache
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticated
@@ -19,6 +17,13 @@ from users.models import (
 
 # services
 from ..services.user_services import UserServices
+from ..services.data_services import DataServices
+
+# exceptions
+from json import JSONDecodeError
+from csv import Error as ErrorCSV
+from ..exceptions.invalid_file_exception import InvalidFileTypeError
+
 
 class UsersListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -91,27 +96,33 @@ class UserCreateView(generics.CreateAPIView):
  
     def create(self, request, *args, **kwargs):
         data_users = None
-        users_to_create = []
+        users_created = []
         # verifica o envio de um arquivo json
         if 'file' in request.FILES:
             file = request.FILES['file']
             try:
-                data_users = json.load(file)
-                print(len(data_users['results']))
-                print(data_users['results'][0])
-            except json.JSONDecodeError:
+                data_users = DataServices.load_file(data_file=file)
+            except JSONDecodeError:
                 return Response(
                     {"error": "O arquivo não é um JSON válido."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            except ErrorCSV:
+                return Response(
+                    {"error": "O arquivo não é um CSV válido."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            except InvalidFileTypeError:
+                return Response(
+                    {"error": "O arquivo não possui um formato válido. Envie no formato '.csv' ou '.json' "},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
         else:
             data_users = data_users if isinstance(data_users, list) else [request.data]
         
-        print(data_users['results'][0])
-        
 
-        for data in data_users['results']:
+        for data in data_users:
             # Extrai os dados da requisicao
             name_data = data.get("name")
             location_data = data.get("location")
@@ -152,12 +163,12 @@ class UserCreateView(generics.CreateAPIView):
                 registered=registered_data,
                 nationality="BR",
             )
-            users_to_create.append(user)
+            users_created.append(user)
             contact = Contact.objects.create(
                 user=user,
                 **contacts_data
             )
 
         # Utilize o serializer apenas para validar e retornar os dados
-        serializer = self.get_serializer(users_to_create, many=True)
+        serializer = self.get_serializer(users_created, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
