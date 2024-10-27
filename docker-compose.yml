@@ -3,7 +3,7 @@ version: "3.3"
 services:
   django:
     build: .
-    command: /app/entrypoint.sh
+    command:  ["/bin/sh", "-c", "/app/entrypoint.sh && /app/validate.sh"]
     volumes:
       - .:/app
     ports:
