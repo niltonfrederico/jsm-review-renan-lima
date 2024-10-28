@@ -14,7 +14,7 @@ class Name(models.Model):
         ordering = ["id"]
 
     def __str__(self) -> str:
-        return self.first_name
+        return self.first
 
 
 class Coordinates(models.Model):
@@ -100,7 +100,7 @@ class User(models.Model):
         ordering = ["id"]
 
     def __str__(self) -> str:
-        return self.name.first_name
+        return self.name.first
 
     def get_contacts(self):
         """

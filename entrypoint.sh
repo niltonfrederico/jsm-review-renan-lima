@@ -14,7 +14,7 @@ python user_manager.py
 
 python data_manager.py
 
-python manage.py test
+python manage.py test -v 2
 
 # Start the server
 exec python manage.py runserver 0.0.0.0:8080
