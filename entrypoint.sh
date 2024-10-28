@@ -14,13 +14,7 @@ python user_manager.py
 
 python data_manager.py
 
+python manage.py test
+
 # Start the server
-python manage.py runserver 0.0.0.0:8080
-
-# # wait server
-# sleep 10
-
-# # send data to the API from CSV and JSON
-
-# # wait for the server to finish
-# wait
+exec python manage.py runserver 0.0.0.0:8080

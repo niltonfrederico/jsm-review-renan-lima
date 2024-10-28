@@ -12,8 +12,6 @@ from users.services.data_services import DataServices
 
 class SendDataAPI:
     def __init__(self):
-        self.url_token = "http://127.0.0.1:8080/api/v1/token/"
-        self.url_create_user = "http://127.0.0.1:8080/api/v1/users/create/"
         self.csv_url = 'https://storage.googleapis.com/juntossomosmais-code-challenge/input-backend.csv'
         self.json_url = 'https://storage.googleapis.com/juntossomosmais-code-challenge/input-backend.json'
 
