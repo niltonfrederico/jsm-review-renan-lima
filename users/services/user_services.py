@@ -87,7 +87,7 @@ class UserServices:
             }
             gender_data = cls.formatter_gender(data.get("gender"))
             birthday = data.get("dob")['date']
-            registered_data = data.get("registered")
+            registered_data = data.get("registered")['date']
     
             #Type
             type_data = cls.get_type_user_from_region(longitude=location_data['coordinates']['longitude'],latitude=location_data['coordinates']['latitude'])
