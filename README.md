@@ -7,8 +7,13 @@ O processo de subir os containers também definirá um superusuário (User: admi
 
 ## Endpoints
 ### Autenticação
-![image](https://github.com/user-attachments/assets/93e7821f-d355-44e2-afb4-9af1ac64ed6c)
+Para obter o token de autenticação é preciso enviar um POST para /api/v1/token/ e recuperar o valor da chave *access*. 
+
+![image](https://github.com/user-attachments/assets/034b422a-0f19-4676-8475-f9799624bbbc)
+
+A API permite o envio de um arquivo ".csv" ou ".json" para adiconar registros no banco. É necessário adicionar um Authorization do tipo *Bearer Token* com a chave recuperada na rota de token.
+
+![image](https://github.com/user-attachments/assets/9cf9175f-3f54-4dbe-9fdc-ad8eb2b23790)
 
 
 
- 
