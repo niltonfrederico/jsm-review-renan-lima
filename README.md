@@ -24,7 +24,7 @@ ou
 docker-compose up
 
 ```
-#### Este comando já realiza todas as configurações, migrações e criações necessárias serem disponibilizadas na API.
+#### Este comando usando docker já realiza todas as configurações, migrações e criações necessárias para disponibilizar os dados na API.
 
 ### Testes
 
