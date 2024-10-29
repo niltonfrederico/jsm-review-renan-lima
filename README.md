@@ -24,6 +24,7 @@ ou
 docker-compose up
 
 ```
+#### Este comando já realiza todas as configurações, migrações e criações necessárias serem disponibilizadas na API.
 
 ### Testes
 
