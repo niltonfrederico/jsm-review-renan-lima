@@ -1,7 +1,7 @@
 # Teste Case Juntos Somos Mais
 ## Intruções
 
-### Instale o Docker 
+#### Instale o Docker 
 
 Caso Não tenha instalado, é preciso instalar o Docker.
 
@@ -12,7 +12,7 @@ $ git clone https://github.com/7renan/challenge-juntos.git
 
 ```
 
-### Utilize o comando docker para disponibilizar todos os serviços, configurações e dados necessários para a aplicação:
+#### Utilize o comando docker para disponibilizar todos os serviços, configurações e dados necessários para a aplicação:
 
 
 ```
@@ -29,7 +29,8 @@ docker-compose up
 
 Foram implementados testes unitários para garantir um bom funcionamento da aplicação.
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/4395cc92-85e5-46a2-83ba-5f8bcae0b617)
+
 
 ### Endpoints (Listagem)
 
@@ -85,7 +86,7 @@ http://localhost:8080/api/v1/users/norte/especial
 ![image](https://github.com/user-attachments/assets/96028bc0-42e6-4654-b123-ebb3d8215197)
 
 
-É preciso enviar no corpo da requisição o username (admin) e password(admin) para obter o valor da chave "acceess".
+É preciso enviar no corpo da requisição o username (admin) e password(admin) para obter o valor da chave "access".
 
 ```
 {
