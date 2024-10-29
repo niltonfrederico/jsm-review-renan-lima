@@ -71,63 +71,81 @@ class UserServices:
             return 'normal'
         else:
             return 'trabalhoso'
+        
+    @classmethod
+    def verify_user_exists(cls, data_user: dict) -> bool:
+        # verify name exists
+        name = Name.objects.filter(
+            title=data_user['name']['title'],
+            first=data_user['name']['first'],
+            last=data_user['name']['last']
+        ).first()
+
+        # verify user and contact exists
+        if name:
+            user = User.objects.filter(
+                name_id=name.id,
+            ).first()
+
+            return Contact.objects.filter(
+                user_id=user.id,
+                email=data_user['email']
+            ).exists()
+        
+        else:
+            return False
 
     @classmethod
     def create_users_from_data(cls, data_users: list) -> list:
         users_created = []
         for data in data_users:
-            user_existing = User.objects.filter(
-                name__first=data['name']['first'],
-                name__last=data['name']['last'],
-                contacts__phone=data['phone'],
-                contacts__email=data['email']
-            ).exists()
-            if not user_existing:
-                # Extrai os dados da requisicao
-                name_data = data.get("name")
-                location_data = data.get("location")
-                picture_data = data.get("picture")
-                contacts_data = {
-                    "email": data['email'],
-                    "phone": [cls.formatter_phone(data['phone'])],
-                    "cell": [cls.formatter_phone(data['cell'])]
-                }
-                gender_data = cls.formatter_gender(data.get("gender"))
-                birthday = data.get("dob")['date']
-                registered_data = data.get("registered")['date']
-        
-                #Type
-                type_data = cls.get_type_user_from_region(longitude=location_data['coordinates']['longitude'],latitude=location_data['coordinates']['latitude'])
-                # Criação de objetos relacionados
-                name = Name.objects.create(**name_data)
-                location_data['region'] = cls.get_region_user_from_state(state=location_data['state'])
-                coordinates_data = location_data.pop("coordinates")
-                timezone_data = location_data.pop("timezone")
-        
-                coordinates = Coordinates.objects.create(**coordinates_data)
-                timezone = Timezone.objects.create(**timezone_data)
-        
-                location = Location.objects.create(
-                    coordinates=coordinates, timezone=timezone, **location_data
-                )
-                picture = Picture.objects.create(**picture_data)
-        
-                # Criar o usuário
-                user = User.objects.create(
-                    name=name,
-                    location=location,
-                    picture=picture,
-                    type=type_data,
-                    gender=gender_data,
-                    birthday=birthday,
-                    registered=registered_data,
-                    nationality="BR",
-                )
-                users_created.append(user)
-                contact = Contact.objects.create(
-                    user=user,
-                    **contacts_data
-                )
+            # extract data from request
+            name_data = data.get("name")
+            location_data = data.get("location")
+            picture_data = data.get("picture")
+            contacts_data = {
+                "email": data['email'],
+                "phone": [cls.formatter_phone(data['phone'])],
+                "cell": [cls.formatter_phone(data['cell'])]
+            }
+            gender_data = cls.formatter_gender(data.get("gender"))
+            birthday = data.get("dob")['date']
+            registered_data = data.get("registered")['date']
+    
+            #Type
+            type_data = cls.get_type_user_from_region(longitude=location_data['coordinates']['longitude'],latitude=location_data['coordinates']['latitude'])
+            # create objects
+            name = Name.objects.create(**name_data)
+            location_data['region'] = cls.get_region_user_from_state(state=location_data['state'])
+            coordinates_data = location_data.pop("coordinates")
+            timezone_data = location_data.pop("timezone")
+    
+            coordinates = Coordinates.objects.create(**coordinates_data)
+            timezone = Timezone.objects.create(**timezone_data)
+    
+            location = Location.objects.create(
+                coordinates=coordinates, timezone=timezone, **location_data
+            )
+            picture = Picture.objects.create(**picture_data)
+    
+            # create User
+            user = User.objects.create(
+                name=name,
+                location=location,
+                picture=picture,
+                type=type_data,
+                gender=gender_data,
+                birthday=birthday,
+                registered=registered_data,
+                nationality="BR",
+            )
+            users_created.append(user)
+            contact = Contact.objects.create(
+                user=user,
+                **contacts_data
+            )
+        print(f"### {len(users_created)} registros carregados com sucesso!")
+        # return users created
         return users_created
         
     @classmethod
